@@ -7,7 +7,7 @@ USERS = {
     'def': 'Fred'
 }
 
-COOKIE_PATH='/login/'
+COOKIE_PATH='/'
 USERNAME='username'
 
 @route('/login/:token')
