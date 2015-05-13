@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from bottle import request, response, route, run
+from bottle import request, response, route, run, static_file
 
 USERS = {
     'abc': 'Bob',
@@ -26,5 +26,9 @@ def login(token):
 def logout():
     response.delete_cookie(USERNAME, path=COOKIE_PATH)
     return "Logged out"
+
+@route('/static/<filepath:path>')
+def static(filepath):
+    return static_file(filepath, root='static/')
 
 run(host='localhost', port=8080, debug=True)
