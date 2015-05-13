@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from bottle import request, response, route, run, static_file
+from bottle import request, response, route, run, static_file, template
 
 USERS = {
     'abc': 'Bob',
@@ -9,6 +9,14 @@ USERS = {
 
 COOKIE_PATH='/'
 USERNAME='username'
+
+@route('/')
+def home():
+    logged_in_user = request.get_cookie(USERNAME)
+    if logged_in_user:
+        return template('main', name=logged_in_user)
+    else:
+        return template('not_logged_in')
 
 @route('/login/:token')
 def login(token):
