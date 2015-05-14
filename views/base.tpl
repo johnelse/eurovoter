@@ -25,7 +25,12 @@
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="/static/images/favicon.png">
+% if jquery:
 
+  <!-- jQuery
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script type="text/javascript" src="/static/js/jquery-2.1.4.min.js"></script>
+% end
 </head>
 <body>
 
