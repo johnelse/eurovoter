@@ -25,11 +25,13 @@
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="/static/images/favicon.png">
-% if jquery:
+% if scripts != []:
 
-  <!-- jQuery
+  <!-- JavaScript
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script type="text/javascript" src="/static/js/jquery-2.1.4.min.js"></script>
+%   for script in scripts:
+  <script type="text/javascript" src="/static/js/{{script}}"></script>
+%   end
 % end
 </head>
 <body>
