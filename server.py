@@ -10,12 +10,13 @@ USERS = {
 }
 
 COOKIE_PATH='/'
-USERNAME='username'
+TOKEN='token'
 
 @route('/')
 def home():
-    logged_in_user = request.get_cookie(USERNAME)
-    if logged_in_user:
+    cookie_token = request.get_cookie(TOKEN)
+    if cookie_token:
+        logged_in_user = USERS[cookie_token]
         return template('main', name=logged_in_user)
     else:
         return template('message', message="Not logged in",
@@ -24,15 +25,16 @@ def home():
 
 @route('/login/:token')
 def login(token):
-    logged_in_user = request.get_cookie(USERNAME)
-    if logged_in_user:
+    cookie_token = request.get_cookie(TOKEN)
+    if cookie_token:
+        logged_in_user = USERS[cookie_token]
         return template('message',
                         message=("Already logged in as %s" % logged_in_user),
                         logout_link=True,
                         start_link=True)
     elif USERS.has_key(token):
         user = USERS[token]
-        response.set_cookie('username', user, path=COOKIE_PATH)
+        response.set_cookie('token', token, path=COOKIE_PATH)
         return template('message',
                          message=("Logged in as %s" % user),
                          logout_link=True,
@@ -45,7 +47,7 @@ def login(token):
 
 @route('/logout')
 def logout():
-    response.delete_cookie(USERNAME, path=COOKIE_PATH)
+    response.delete_cookie(TOKEN, path=COOKIE_PATH)
     return template('message',
                     message="Logged out",
                     logout_link=False,
