@@ -40,9 +40,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="one-half column" style="margin-top: 25%">
 {{!base}}
-      </div>
 % if logout_link:
       <div class="one-half column" style="margin-top: 25%">
         <a href="/logout">Logout</a>
