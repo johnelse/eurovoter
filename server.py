@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
+import argparse
 from bottle import request, response, route, run, static_file, template
+import sys
 
 USERS = {
     'abc': 'Bob',
@@ -53,4 +55,13 @@ def logout():
 def static(filepath):
     return static_file(filepath, root='static/')
 
-run(host='localhost', port=8080, debug=True)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-a', '--address', default='127.0.0.1',
+                        help='The address on which to listen')
+    parser.add_argument('-p', '--port', default=8080,
+                        help='The port on which to listen')
+    parser.add_argument('-d', '--debug', action='store_true',
+                        help='Run in debug mode')
+    args = parser.parse_args(sys.argv[1:])
+    run(host=args.address, port=args.port, debug=args.debug)
