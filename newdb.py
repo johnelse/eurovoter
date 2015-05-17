@@ -10,12 +10,12 @@ def create_db(path):
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE voters(
                        id INTEGER PRIMARY KEY,
-                       name TEXT,
-                       token TEXT)
+                       name TEXT UNIQUE,
+                       token TEXT UNIQUE)
                    ''')
     cursor.execute('''CREATE TABLE countries(
                        id INTEGER PRIMARY KEY,
-                       name TEXT)
+                       name TEXT UNIQUE)
                    ''')
     cursor.execute('''CREATE TABLE votes(
                        points INTEGER,
