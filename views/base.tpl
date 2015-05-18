@@ -42,7 +42,7 @@
     <div class="row">
 {{!base}}
 % if logout_link:
-      <div class="u-full-width" style="margin-top: 25%">
+      <div class="u-full-width" style="margin-top: 5%">
         <a href="/logout">Logout</a>
       </div>
 % end

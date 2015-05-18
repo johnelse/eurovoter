@@ -1,5 +1,5 @@
 % rebase('base.tpl', logout_link=True, scripts=['jquery-2.1.4.min.js'])
-      <div class="u-full-width" style="margin-top: 25%">
+      <div class="u-full-width" style="margin-top: 5%">
         <h4>Welcome, {{name.title()}}!</h4>
       </div>
       <form id="votingForm">
