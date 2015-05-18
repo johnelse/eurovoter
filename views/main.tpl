@@ -1,6 +1,7 @@
 % rebase('base.tpl', logout_link=True, scripts=['jquery-2.1.4.min.js'])
       <div class="u-full-width" style="margin-top: 5%">
         <h4>Welcome, {{name.title()}}!</h4>
+        <p>Choose wisely:</p>
       </div>
       <form id="votingForm">
 % for score in scores:
