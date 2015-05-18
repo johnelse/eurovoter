@@ -8,7 +8,17 @@ import sys
 COOKIE_PATH='/'
 TOKEN='token'
 
+SCORES=[12, 10, 8, 7, 6, 5, 4, 3, 2, 1]
+
 db_path=""
+
+def get_countries():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM countries ORDER BY name")
+    result = cursor.fetchall()
+    conn.close()
+    return result
 
 def get_voter(token):
     conn = sqlite3.connect(db_path)
@@ -27,7 +37,8 @@ def home():
     cookie_token = request.get_cookie(TOKEN)
     if cookie_token:
         _, name = get_voter(cookie_token)
-        return template('main', name=name)
+        countries = get_countries()
+        return template('main', name=name, countries=countries, scores=SCORES)
     else:
         return template('message', message="Not logged in",
                         logout_link=False,
