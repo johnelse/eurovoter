@@ -17,6 +17,7 @@ SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1]
 
 DB_PATH = ""
 
+
 def get_countries():
     """
     Get an alphabetised list of countries from the database.
@@ -27,6 +28,7 @@ def get_countries():
     result = cursor.fetchall()
     conn.close()
     return result
+
 
 def get_voter(token):
     """
@@ -43,6 +45,7 @@ def get_voter(token):
     else:
         return None
 
+
 @route('/')
 def home():
     """
@@ -57,6 +60,7 @@ def home():
         return template('message', message="Not logged in",
                         logout_link=False,
                         start_link=False)
+
 
 @route('/login/:token')
 def login(token):
@@ -85,6 +89,7 @@ def login(token):
                             logout_link=False,
                             start_link=False)
 
+
 @route('/logout')
 def logout():
     """
@@ -96,6 +101,7 @@ def logout():
                     logout_link=False,
                     start_link=False)
 
+
 @route('/static/<filepath:path>')
 def static(filepath):
     """
@@ -103,12 +109,14 @@ def static(filepath):
     """
     return static_file(filepath, root='static/')
 
+
 def set_db_path(path):
     """
     Set the global database path.
     """
     global DB_PATH
     DB_PATH = path
+
 
 def main():
     """
@@ -126,6 +134,7 @@ def main():
     args = parser.parse_args(sys.argv[1:])
     set_db_path(args.path)
     run(host=args.address, port=args.port, debug=args.debug)
+
 
 if __name__ == "__main__":
     main()

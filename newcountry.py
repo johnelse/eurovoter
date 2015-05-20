@@ -9,6 +9,7 @@ import os.path
 import sqlite3
 import sys
 
+
 def new_country(path, name):
     """
     Add a country with the specified name to the database at the
@@ -19,6 +20,7 @@ def new_country(path, name):
     cursor.execute("INSERT INTO countries VALUES(NULL, '%s')" % name)
     conn.commit()
     conn.close()
+
 
 def main():
     """
@@ -33,6 +35,7 @@ def main():
     if not os.path.exists(args.path):
         raise RuntimeError('Database file does not exist')
     new_country(args.path, args.name)
+
 
 if __name__ == "__main__":
     main()

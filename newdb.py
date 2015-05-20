@@ -9,6 +9,7 @@ import os.path
 import sqlite3
 import sys
 
+
 def create_db(path):
     """
     Create a database at the specified path.
@@ -34,6 +35,7 @@ def create_db(path):
     conn.commit()
     conn.close()
 
+
 def main():
     """
     Program entry point.
@@ -45,6 +47,7 @@ def main():
     if os.path.exists(args.path):
         raise RuntimeError('File already exists')
     create_db(args.path)
+
 
 if __name__ == "__main__":
     main()

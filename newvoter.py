@@ -12,6 +12,7 @@ import sqlite3
 import string
 import sys
 
+
 def new_voter(path, name):
     """
     Add a voter with the specified name to the database at the
@@ -24,6 +25,7 @@ def new_voter(path, name):
                    % (name, token))
     conn.commit()
     conn.close()
+
 
 def main():
     """
@@ -38,6 +40,7 @@ def main():
     if not os.path.exists(args.path):
         raise RuntimeError('Database file does not exist')
     new_voter(args.path, args.name)
+
 
 if __name__ == "__main__":
     main()
