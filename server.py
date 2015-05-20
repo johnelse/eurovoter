@@ -5,12 +5,12 @@ from bottle import request, response, route, run, static_file, template
 import sqlite3
 import sys
 
-COOKIE_PATH='/'
-TOKEN='token'
+COOKIE_PATH = '/'
+TOKEN = 'token'
 
-SCORES=[12, 10, 8, 7, 6, 5, 4, 3, 2, 1]
+SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1]
 
-DB_PATH=""
+DB_PATH = ""
 
 def get_countries():
     conn = sqlite3.connect(DB_PATH)
