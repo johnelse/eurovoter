@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+
+"""
+Main web application implementation.
+"""
+
 import argparse
 from bottle import request, response, route, run, static_file, template
 import sqlite3
@@ -13,6 +18,9 @@ SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1]
 DB_PATH = ""
 
 def get_countries():
+    """
+    Get an alphabetised list of countries from the database.
+    """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM countries ORDER BY name")
@@ -21,6 +29,9 @@ def get_countries():
     return result
 
 def get_voter(token):
+    """
+    Get the voter corresponding to the supplied token.
+    """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM voters WHERE token = '%s'" % token)
@@ -34,6 +45,9 @@ def get_voter(token):
 
 @route('/')
 def home():
+    """
+    Serve the main voting page.
+    """
     cookie_token = request.get_cookie(TOKEN)
     if cookie_token:
         _, name = get_voter(cookie_token)
@@ -46,6 +60,9 @@ def home():
 
 @route('/login/:token')
 def login(token):
+    """
+    Login the user with the specified token.
+    """
     cookie_token = request.get_cookie(TOKEN)
     if cookie_token:
         _, name = get_voter(cookie_token)
@@ -70,6 +87,9 @@ def login(token):
 
 @route('/logout')
 def logout():
+    """
+    Logout of the system.
+    """
     response.delete_cookie(TOKEN, path=COOKIE_PATH)
     return template('message',
                     message="Logged out",
@@ -78,13 +98,22 @@ def logout():
 
 @route('/static/<filepath:path>')
 def static(filepath):
+    """
+    Serve a static file at the requested path.
+    """
     return static_file(filepath, root='static/')
 
 def set_db_path(path):
+    """
+    Set the global database path.
+    """
     global DB_PATH
     DB_PATH = path
 
 def main():
+    """
+    Program entry point.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--address', default='127.0.0.1',
                         help='The address on which to listen')

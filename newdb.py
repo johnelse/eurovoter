@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 
+"""
+Create a new empty database with the correct schema.
+"""
+
 import argparse
 import os.path
 import sqlite3
 import sys
 
 def create_db(path):
+    """
+    Create a database at the specified path.
+    """
     conn = sqlite3.connect(path)
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE voters(
@@ -28,6 +35,9 @@ def create_db(path):
     conn.close()
 
 def main():
+    """
+    Program entry point.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('path', type=str,
                         help='Path at which the database should be created')
