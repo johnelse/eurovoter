@@ -27,7 +27,7 @@ def create_db(path):
     conn.commit()
     conn.close()
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('path', type=str,
                         help='Path at which the database should be created')
@@ -35,3 +35,6 @@ if __name__ == "__main__":
     if os.path.exists(args.path):
         raise RuntimeError('File already exists')
     create_db(args.path)
+
+if __name__ == "__main__":
+    main()

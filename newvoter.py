@@ -16,7 +16,7 @@ def new_voter(path, name):
     conn.commit()
     conn.close()
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('path', type=str,
                         help='Path to the database file')
@@ -26,3 +26,6 @@ if __name__ == "__main__":
     if not os.path.exists(args.path):
         raise RuntimeError('Database file does not exist')
     new_voter(args.path, args.name)
+
+if __name__ == "__main__":
+    main()

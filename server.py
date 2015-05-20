@@ -10,10 +10,10 @@ TOKEN='token'
 
 SCORES=[12, 10, 8, 7, 6, 5, 4, 3, 2, 1]
 
-db_path=""
+DB_PATH=""
 
 def get_countries():
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM countries ORDER BY name")
     result = cursor.fetchall()
@@ -21,7 +21,7 @@ def get_countries():
     return result
 
 def get_voter(token):
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM voters WHERE token = '%s'" % token)
     result = cursor.fetchone()
@@ -81,10 +81,10 @@ def static(filepath):
     return static_file(filepath, root='static/')
 
 def set_db_path(path):
-    global db_path
-    db_path = path
+    global DB_PATH
+    DB_PATH = path
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--address', default='127.0.0.1',
                         help='The address on which to listen')
@@ -97,3 +97,6 @@ if __name__ == "__main__":
     args = parser.parse_args(sys.argv[1:])
     set_db_path(args.path)
     run(host=args.address, port=args.port, debug=args.debug)
+
+if __name__ == "__main__":
+    main()
