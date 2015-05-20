@@ -80,9 +80,9 @@ def login(token):
             _, name = voter
             response.set_cookie('token', token, path=COOKIE_PATH)
             return template('message',
-                             message=("Logged in as %s" % name),
-                             logout_link=True,
-                             start_link=True)
+                            message=("Logged in as %s" % name),
+                            logout_link=True,
+                            start_link=True)
         else:
             return template('message',
                             message="Invalid token",
