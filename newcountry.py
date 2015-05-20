@@ -2,9 +2,7 @@
 
 import argparse
 import os.path
-import random
 import sqlite3
-import string
 import sys
 
 def new_country(path, name):
