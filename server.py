@@ -46,6 +46,21 @@ def get_voter(token):
         return None
 
 
+def get_previous_votes(voter_id):
+    """
+    Get a dictionary of a voter's previous votes. Keys are the scores, values
+    are the country IDs.
+    """
+    votes = {}
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM votes WHERE voter_id = %d" % voter_id)
+    for row in cursor:
+        votes[row[2]] = row[1]
+    conn.close()
+    return votes
+
+
 def save_votes(voter_id, post):
     """
     Save a user's set of votes in the database.
@@ -71,9 +86,13 @@ def home():
     """
     cookie_token = request.get_cookie(TOKEN)
     if cookie_token:
-        _, name = get_voter(cookie_token)
+        voter_id, name = get_voter(cookie_token)
         countries = get_countries()
-        return template('main', name=name, countries=countries, scores=SCORES)
+        previous_votes = get_previous_votes(voter_id)
+        return template('main', name=name,
+                        countries=countries,
+                        previous_votes=previous_votes,
+                        scores=SCORES)
     else:
         return template('message', message="Not logged in",
                         logout_link=False,
