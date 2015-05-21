@@ -110,6 +110,14 @@ def static(filepath):
     return static_file(filepath, root='static/')
 
 
+@route('/formsubmit', method='POST')
+def formsubmit():
+    """
+    Receive a form submission.
+    """
+    return "Ok"
+
+
 def set_db_path(path):
     """
     Set the global database path.
