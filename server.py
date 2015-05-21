@@ -59,7 +59,7 @@ def save_votes(voter_id, post):
         country_id = post.get(key)
         if not country_id == 'None':
             cursor.execute("INSERT INTO votes VALUES(%d, %d, %d)"
-                           % (score, voter_id, int(country_id)))
+                           % (voter_id, int(country_id), score))
     conn.commit()
     conn.close()
 

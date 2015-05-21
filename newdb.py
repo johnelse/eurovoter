@@ -26,9 +26,9 @@ def create_db(path):
                        name TEXT UNIQUE)
                    ''')
     cursor.execute('''CREATE TABLE votes(
-                       points INTEGER,
                        voter_id INTEGER,
                        country_id INTEGER,
+                       points INTEGER,
                        FOREIGN KEY(voter_id) REFERENCES voters(id),
                        FOREIGN KEY(country_id) REFERENCES countries(id))
                    ''')
