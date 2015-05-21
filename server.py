@@ -46,6 +46,24 @@ def get_voter(token):
         return None
 
 
+def save_votes(voter_id, post):
+    """
+    Save a user's set of votes in the database.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA foreign_keys = ON")
+    cursor.execute("DELETE FROM votes WHERE voter_id = %d" % voter_id)
+    for score in SCORES:
+        key = "%dpoints" % score
+        country_id = post.get(key)
+        if not country_id == 'None':
+            cursor.execute("INSERT INTO votes VALUES(%d, %d, %d)"
+                           % (score, voter_id, int(country_id)))
+    conn.commit()
+    conn.close()
+
+
 @route('/')
 def home():
     """
@@ -115,7 +133,16 @@ def formsubmit():
     """
     Receive a form submission.
     """
-    return "Ok"
+    cookie_token = request.get_cookie(TOKEN)
+    if cookie_token:
+        try:
+            voter_id, _ = get_voter(cookie_token)
+            save_votes(voter_id, request.POST)
+            return "Ok"
+        except RuntimeError:
+            return "An error occurred"
+    else:
+        return "Not logged in"
 
 
 def set_db_path(path):

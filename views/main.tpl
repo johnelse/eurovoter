@@ -8,7 +8,7 @@
       <form id="voting">
 % for score in scores:
         <label for="{{score}}points">{{score}} points</label>
-        <select class="u-full-width" id="{{score}}points">
+        <select class="u-full-width" name="{{score}}points">
           <option value="None">-- Choose --</option>
 %   for country_id, name in countries:
           <option value="{{country_id}}">{{name}}</option>
