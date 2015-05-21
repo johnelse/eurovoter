@@ -80,6 +80,31 @@ def home():
                         start_link=False)
 
 
+@route('/results')
+def results():
+    """
+    Serve the results page.
+    """
+    results_list = []
+    countries = get_countries()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    for country_id, country_name in countries:
+        cursor.execute("SELECT * FROM VOTES WHERE country_id = %d"
+                       % country_id)
+        total_score = 0
+        for row in cursor:
+            total_score += row[2]
+        results_list.append((country_name, total_score))
+    conn.close()
+
+    results_list_sorted = sorted(results_list,
+                                 key=(lambda x: x[1]),
+                                 reverse=True)
+
+    return template('results', results=results_list_sorted)
+
+
 @route('/login/:token')
 def login(token):
     """
