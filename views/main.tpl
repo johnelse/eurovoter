@@ -3,7 +3,7 @@
         <h4>Welcome, {{name.title()}}!</h4>
         <p>Choose wisely:</p>
       </div>
-      <form id="votingForm">
+      <form id="voting">
 % for score in scores:
         <label for="{{score}}points">{{score}} points</label>
         <select class="u-full-width" id="{{score}}points">
