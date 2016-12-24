@@ -6,9 +6,9 @@ Main web application implementation.
 """
 
 import argparse
-from bottle import request, response, route, run, static_file, template
 import sqlite3
 import sys
+from bottle import request, response, route, run, static_file, template
 
 COOKIE_PATH = '/'
 TOKEN = 'token'
@@ -72,7 +72,7 @@ def save_votes(voter_id, post):
     for score in SCORES:
         key = "%dpoints" % score
         country_id = post.get(key)
-        if not country_id == 'None':
+        if country_id != 'None':
             cursor.execute("INSERT INTO votes VALUES(%d, %d, %d)"
                            % (voter_id, int(country_id), score))
     conn.commit()
