@@ -6,39 +6,33 @@ Main web application implementation.
 """
 
 import argparse
-import sqlite3
 import sys
-from bottle import request, response, route, run, static_file, template
+from bottle import install, request, response, route, run, static_file, template
+from bottle_sqlite import SQLitePlugin
 
 COOKIE_PATH = '/'
 TOKEN = 'token'
 
 SCORES = [12, 10, 8, 7, 6, 5, 4, 3, 2, 1]
 
-DB_PATH = ""
 
-
-def get_countries():
+def get_countries(db):
     """
     Get an alphabetised list of countries from the database.
     """
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    cursor = db.cursor()
     cursor.execute("SELECT * FROM countries ORDER BY name")
     result = cursor.fetchall()
-    conn.close()
     return result
 
 
-def get_voter(token):
+def get_voter(db, token):
     """
     Get the voter corresponding to the supplied token.
     """
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    cursor = db.cursor()
     cursor.execute("SELECT * FROM voters WHERE token = '%s'" % token)
     result = cursor.fetchone()
-    conn.close()
     if result:
         voter_id, name, _ = result
         return (voter_id, name)
@@ -46,27 +40,24 @@ def get_voter(token):
         return None
 
 
-def get_previous_votes(voter_id):
+def get_previous_votes(db, voter_id):
     """
     Get a dictionary of a voter's previous votes. Keys are the scores, values
     are the country IDs.
     """
     votes = {}
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    cursor = db.cursor()
     cursor.execute("SELECT * FROM votes WHERE voter_id = %d" % voter_id)
     for row in cursor:
         votes[row[2]] = row[1]
-    conn.close()
     return votes
 
 
-def save_votes(voter_id, post):
+def save_votes(db, voter_id, post):
     """
     Save a user's set of votes in the database.
     """
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    cursor = db.cursor()
     cursor.execute("PRAGMA foreign_keys = ON")
     cursor.execute("DELETE FROM votes WHERE voter_id = %d" % voter_id)
     for score in SCORES:
@@ -75,20 +66,19 @@ def save_votes(voter_id, post):
         if country_id != 'None':
             cursor.execute("INSERT INTO votes VALUES(%d, %d, %d)"
                            % (voter_id, int(country_id), score))
-    conn.commit()
-    conn.close()
+    db.commit()
 
 
 @route('/')
-def home():
+def home(db):
     """
     Serve the main voting page.
     """
     cookie_token = request.get_cookie(TOKEN)
     if cookie_token:
-        voter_id, name = get_voter(cookie_token)
-        countries = get_countries()
-        previous_votes = get_previous_votes(voter_id)
+        voter_id, name = get_voter(db, cookie_token)
+        countries = get_countries(db)
+        previous_votes = get_previous_votes(db, voter_id)
         return template('main', name=name,
                         countries=countries,
                         previous_votes=previous_votes,
@@ -100,14 +90,13 @@ def home():
 
 
 @route('/results')
-def results():
+def results(db):
     """
     Serve the results page.
     """
     results_list = []
-    countries = get_countries()
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    countries = get_countries(db)
+    cursor = db.cursor()
     for country_id, country_name in countries:
         cursor.execute("SELECT * FROM VOTES WHERE country_id = %d"
                        % country_id)
@@ -115,7 +104,6 @@ def results():
         for row in cursor:
             total_score += row[2]
         results_list.append((country_name, total_score))
-    conn.close()
 
     results_list_sorted = sorted(results_list,
                                  key=(lambda x: x[1]),
@@ -125,19 +113,19 @@ def results():
 
 
 @route('/login/:token')
-def login(token):
+def login(db, token):
     """
     Login the user with the specified token.
     """
     cookie_token = request.get_cookie(TOKEN)
     if cookie_token:
-        _, name = get_voter(cookie_token)
+        _, name = get_voter(db, cookie_token)
         return template('message',
                         message=("Already logged in as %s" % name),
                         logout_link=True,
                         start_link=True)
     else:
-        voter = get_voter(token)
+        voter = get_voter(db, token)
         if voter:
             _, name = voter
             response.set_cookie('token', token, path=COOKIE_PATH)
@@ -173,28 +161,20 @@ def static(filepath):
 
 
 @route('/formsubmit', method='POST')
-def formsubmit():
+def formsubmit(db):
     """
     Receive a form submission.
     """
     cookie_token = request.get_cookie(TOKEN)
     if cookie_token:
         try:
-            voter_id, _ = get_voter(cookie_token)
-            save_votes(voter_id, request.POST)
+            voter_id, _ = get_voter(db, cookie_token)
+            save_votes(db, voter_id, request.POST)
             return "Ok"
         except RuntimeError:
             return "An error occurred"
     else:
         return "Not logged in"
-
-
-def set_db_path(path):
-    """
-    Set the global database path.
-    """
-    global DB_PATH
-    DB_PATH = path
 
 
 def main():
@@ -211,7 +191,7 @@ def main():
     parser.add_argument('path', type=str,
                         help='Path to the database file')
     args = parser.parse_args(sys.argv[1:])
-    set_db_path(args.path)
+    install(SQLitePlugin(dbfile=args.path))
     run(host=args.address, port=args.port, debug=args.debug)
 
 
