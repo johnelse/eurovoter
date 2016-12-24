@@ -7,7 +7,8 @@ Main web application implementation.
 
 import argparse
 import sys
-from bottle import install, request, response, route, run, static_file, template
+from bottle import install
+from bottle import request, response, route, run, static_file, template
 from bottle_sqlite import SQLitePlugin
 
 COOKIE_PATH = '/'
