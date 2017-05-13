@@ -7,7 +7,7 @@ build:
 	@docker build -t ${USER}/eurovoter docker
 
 run: build
-	docker run -d \
+	docker run -it --rm \
 		--name eurovoter \
 		-p $(ADDRESS):8080:8080 \
 		-v ${PWD}:/eurovoter \
