@@ -12,7 +12,7 @@
           <option value="None">-- Choose --</option>
 %   for country_id, name in countries:
 %     selected = ""
-%     if previous_votes.has_key(score) and previous_votes[score] == country_id:
+%     if score in previous_votes and previous_votes[score] == country_id:
 %       selected = " selected"
 %     end
           <option value="{{country_id}}"{{selected}}>{{name}}</option>
